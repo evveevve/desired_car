@@ -29,11 +29,40 @@ class _CompareState extends State<Compare> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Compare'),
-        backgroundColor: const Color(0xFFE4E4EE),
-      ),
-      body: WebViewWidget(controller: controller),
+      extendBody: true,
+      body: Stack(children: [
+        WebViewWidget(controller: controller),
+        Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: double.infinity,
+              height: 80,
+              color: const Color(0xFFE4E4EE),
+              child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        shadows: [
+                          Shadow(color: Colors.orange[900]!, blurRadius: 5)
+                        ],
+                      ),
+                      color: Colors.orange[900],
+                    ),
+                    Text(
+                      'Desired Car',
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[900]),
+                    ),
+                  ])),
+            ))
+      ]),
     );
   }
 }

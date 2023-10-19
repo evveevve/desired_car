@@ -44,7 +44,7 @@ List<Map> colors = [
 class _CarDetailState extends State<CarDetail>
     with SingleTickerProviderStateMixin {
   // Animation setups
- late  AnimationController animationController;
+  late AnimationController animationController;
   late Animation animation;
   List<AnimationItem> animationItems = [];
 
@@ -53,8 +53,8 @@ class _CarDetailState extends State<CarDetail>
   // setup animations
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration:const Duration(milliseconds: 700));
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 700));
     for (int i = 0; i < 10; i++) {
       animationItems.add(
         AnimationItem(
@@ -87,12 +87,12 @@ class _CarDetailState extends State<CarDetail>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:const Color(
+      backgroundColor: const Color(
         0XFFF4F4FF,
       ),
       body: SingleChildScrollView(
-        physics:const BouncingScrollPhysics(),
-        child:SizedBox(
+        physics: const BouncingScrollPhysics(),
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -104,7 +104,7 @@ class _CarDetailState extends State<CarDetail>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     const SizedBox(
+                      const SizedBox(
                         height: kToolbarHeight,
                       ),
                       FadeSlide(
@@ -127,12 +127,12 @@ class _CarDetailState extends State<CarDetail>
                                     color: Colors.grey[300]!,
                                   ),
                                 ),
-                                child:const Icon(Icons.keyboard_backspace
-                                  // FlutterIcons.chevron_left_fea,
-                                ),
+                                child: const Icon(Icons.keyboard_backspace
+                                    // FlutterIcons.chevron_left_fea,
+                                    ),
                               ),
                             ),
-                         const   Spacer(),
+                            const Spacer(),
                             GestureDetector(
                               onTap: () {},
                               child: Container(
@@ -144,15 +144,15 @@ class _CarDetailState extends State<CarDetail>
                                     color: Colors.grey[300]!,
                                   ),
                                 ),
-                                child:const Icon(Icons.menu
-                                  // MIcon.riMenu2Line,
-                                ),
+                                child: const Icon(Icons.menu
+                                    // MIcon.riMenu2Line,
+                                    ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                  const    SizedBox(
+                      const SizedBox(
                         height: 25.0,
                       ),
                       FadeSlide(
@@ -171,7 +171,7 @@ class _CarDetailState extends State<CarDetail>
                                   color: Color(0xFF333333),
                                 ),
                               ),
-                            TextSpan(
+                              TextSpan(
                                 text: "Starts from \$201,967",
                                 style: TextStyle(
                                   height: 1.7,
@@ -183,7 +183,7 @@ class _CarDetailState extends State<CarDetail>
                           ),
                         ),
                       ),
-                     const  SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       Expanded(
@@ -205,7 +205,6 @@ class _CarDetailState extends State<CarDetail>
                                 colors[selectedIndex]["asset"],
                               ),
                             ),
-                            
                           ),
                         ),
                       )
@@ -222,7 +221,7 @@ class _CarDetailState extends State<CarDetail>
                   child: Container(
                     height: 360.0,
                     width: double.infinity,
-                    decoration:const BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(50.0),
@@ -239,17 +238,17 @@ class _CarDetailState extends State<CarDetail>
                         Row(
                           children: [
                             _getTabItem("Inspire", true),
-                        const    SizedBox(
+                            const SizedBox(
                               width: 15.0,
                             ),
                             _getTabItem("Inform", false),
-                           const SizedBox(
+                            const SizedBox(
                               width: 15.0,
                             ),
                             _getTabItem("Technical Data", false),
                           ],
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           height: 25.0,
                         ),
                         Text(
@@ -260,9 +259,9 @@ class _CarDetailState extends State<CarDetail>
                             color: Colors.black.withOpacity(.5),
                           ),
                         ),
-                      const  SizedBox(height: 15.0),
-                     const   Divider(),
-                     const   SizedBox(height: 15.0),
+                        const SizedBox(height: 15.0),
+                        const Divider(),
+                        const SizedBox(height: 15.0),
                         Row(
                           children: colors.map((color) {
                             int index = colors.indexOf(color);
@@ -276,7 +275,7 @@ class _CarDetailState extends State<CarDetail>
                               child: Container(
                                 height: 35.0,
                                 width: 35.0,
-                                margin:const  EdgeInsets.only(
+                                margin: const EdgeInsets.only(
                                   right: 10.0,
                                 ),
                                 decoration: BoxDecoration(
@@ -293,7 +292,7 @@ class _CarDetailState extends State<CarDetail>
                             );
                           }).toList(),
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           height: 30.0,
                         ),
                         Row(
@@ -310,10 +309,10 @@ class _CarDetailState extends State<CarDetail>
                                 ),
                               ),
                               child: const Icon(Icons.heart_broken
-                                // FlutterIcons.heart_fea,
-                              ),
+                                  // FlutterIcons.heart_fea,
+                                  ),
                             ),
-                           const SizedBox(width: 20.0),
+                            const SizedBox(width: 20.0),
                             Expanded(
                               child: Container(
                                 width: MediaQuery.of(context).size.width * .7,
@@ -322,9 +321,8 @@ class _CarDetailState extends State<CarDetail>
                                   borderRadius: BorderRadius.circular(24.0),
                                 ),
                                 child: TextButton(
-                                
                                   onPressed: () {},
-                                  child:const Padding(
+                                  child: const Padding(
                                     padding: EdgeInsets.symmetric(
                                       vertical: 22.0,
                                     ),
@@ -360,7 +358,8 @@ Widget _getTabItem(String text, bool isActive) {
       Text(
         text,
         style: TextStyle(
-          color: isActive ?const Color(0xFF333333) : Colors.black.withOpacity(.5),
+          color:
+              isActive ? const Color(0xFF333333) : Colors.black.withOpacity(.5),
           fontSize: isActive ? 18.0 : 16.0,
           fontWeight: FontWeight.bold,
         ),

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class Car {
   final Image image;
   final String name;
-  final int stock;
+  final String variants;
 
   Car({
     required this.image,
     required this.name,
-    required this.stock,
+    required this.variants,
   });
 }

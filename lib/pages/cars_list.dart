@@ -2,7 +2,7 @@ import 'package:desire_car/models/animation_item.dart';
 import 'package:desire_car/pages/car_detail.dart';
 import 'package:desire_car/pages/home.dart';
 import 'package:desire_car/utils/animation_transition.dart';
-import 'package:desire_car/widgets/car_modal.dart';
+import 'package:desire_car/scrapper/data.dart';
 import 'package:desire_car/widgets/fade_slide.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
@@ -14,7 +14,7 @@ class CarsList extends StatefulWidget {
 
 class _CarsListState extends State<CarsList>
     with SingleTickerProviderStateMixin {
- late AnimationController animationController;
+  late AnimationController animationController;
   late Animation animation;
   List<AnimationItem> animationItems = [];
   @override
@@ -83,7 +83,7 @@ class _CarsListState extends State<CarsList>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>const  Home(),
+                            builder: (_) => const Home(),
                           ),
                         );
                       },
@@ -97,11 +97,11 @@ class _CarsListState extends State<CarsList>
                           ),
                         ),
                         child: const Icon(Icons.keyboard_backspace
-                          // FlutterIcons.chevron_left_fea,
-                        ),
+                            // FlutterIcons.chevron_left_fea,
+                            ),
                       ),
                     ),
-                 const    Spacer(),
+                    const Spacer(),
                     const Text(
                       "Panda",
                       style: TextStyle(
@@ -109,19 +109,18 @@ class _CarsListState extends State<CarsList>
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  const   SizedBox(
+                    const SizedBox(
                       width: 10.0,
                     ),
-                 CircleAvatar(
+                    CircleAvatar(
                       backgroundImage: AssetImage(
                         "assets/panda.jpg",
                       ),
                     )
                   ],
                 ),
-              
               ),
-             const SizedBox(
+              const SizedBox(
                 height: 25.0,
               ),
               FadeSlide(
@@ -141,7 +140,6 @@ class _CarsListState extends State<CarsList>
                     height: 1.3,
                   ),
                 ),
-              
               ),
               ListView.separated(
                 shrinkWrap: true,
@@ -155,7 +153,7 @@ class _CarsListState extends State<CarsList>
                     direction:
                         getItemVisibility("slide-${index + 3}", animationItems),
                     child: Container(
-                      padding:const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 20.0,
                       ),
@@ -173,11 +171,11 @@ class _CarsListState extends State<CarsList>
                           children: [
                             Expanded(
                               child: Container(
-                                child: cars[index].image,
+                                child: cars![index].image,
                               ),
                             ),
                             Text(
-                              cars[index].name,
+                              cars![index].name,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15.0,
@@ -187,7 +185,7 @@ class _CarsListState extends State<CarsList>
                               height: 2.0,
                             ),
                             Text(
-                              "${cars[index].stock} Cars",
+                              "${cars![index].variants} Cars",
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -196,7 +194,6 @@ class _CarsListState extends State<CarsList>
                         ),
                       ),
                     ),
-                 
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
@@ -205,7 +202,7 @@ class _CarsListState extends State<CarsList>
                   );
                 },
                 // referencing the cars from car_modal.dart
-                itemCount: cars.length,
+                itemCount: cars!.length,
               )
             ],
           ),

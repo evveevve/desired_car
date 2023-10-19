@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'package:desire_car/scrapper/brands.dart';
+import 'package:desire_car/scrapper/data.dart';
 import 'package:desire_car/models/animation_item.dart';
 import 'package:desire_car/utils/constants.dart';
 import 'package:desire_car/utils/drawer.dart';
@@ -15,18 +16,6 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
-
-List<String> carLogos = [
-  "assets/bmw.png",
-  "assets/mercedes.png",
-  "assets/porsche.png",
-  "assets/vw.png",
-  // I'll just duplicate for more
-  "assets/bmw.png",
-  "assets/mercedes.png",
-  "assets/porsche.png",
-  "assets/vw.png",
-];
 
 const Y_OFFSET = 60.0;
 
@@ -90,8 +79,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       visible: false,
     ),
   ];
+
+  late Map<String, dynamic> selected;
+  List? brandLogo;
   @override
   void initState() {
+    () async {
+      brands = await fetchBrands();
+      // print(brands);
+      if (brands!['error'] == 'no error') {
+        brandLogo = brands!['data'];
+        // print(brandLogo);
+        setState(() {});
+      }
+    }();
     pageController = PageController(
       initialPage: 4,
       // wont take up whole page
@@ -140,219 +141,239 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       key: scaffoldKey,
       endDrawer: const SideDrawer(),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 24.0,
-          ),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Lets slide animated this
-              FadeSlide(
-                direction: getItemVisibility("slide-1", animationItems),
-                offsetX: 0.0,
-                offsetY: Y_OFFSET,
-                duration: getSlideDuration("slide-1", animationItems),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: brandLogo == null
+          ? Center(
+              child: Image.asset(
+                'assets/car_cloud.png',
+              ),
+            )
+          : SafeArea(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24.0,
+                ),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    const Text(
-                      "Dream Car",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26.0,
-                        color: kPrimaryColor,
+                    // Lets slide animated this
+                    FadeSlide(
+                      direction: getItemVisibility("slide-1", animationItems),
+                      offsetX: 0.0,
+                      offsetY: Y_OFFSET,
+                      duration: getSlideDuration("slide-1", animationItems),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          const Text(
+                            "Dream Car",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0,
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () {
+                              scaffoldKey.currentState?.openEndDrawer();
+                            },
+                            icon: const Icon(Icons.menu, color: kPrimaryColor),
+                          ),
+                        ],
                       ),
                     ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        scaffoldKey.currentState?.openEndDrawer();
-                      },
-                      icon: const Icon(Icons.menu, color: kPrimaryColor),
+                    const SizedBox(
+                      height: 50.0,
                     ),
+                    FadeSlide(
+                      direction: getItemVisibility("slide-2", animationItems),
+                      offsetX: 0.0,
+                      offsetY: Y_OFFSET,
+                      duration: getSlideDuration("slide-2", animationItems),
+                      child: const Text(
+                        "Discover Your\nDream Car",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32.0,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    FadeSlide(
+                      direction: getItemVisibility("slide-3", animationItems),
+                      offsetX: 0.0,
+                      offsetY: Y_OFFSET,
+                      duration: getSlideDuration("slide-3", animationItems),
+                      child: const Text(
+                        'Explore a Wide Range of Cars, Evaluate Electric Options, and Compare to Make the Perfect Choice',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.grey,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: PageView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        controller: pageController,
+                        itemBuilder: (BuildContext context, int index) {
+                          // print(brandLogo?[index]['imageSrc']);
+                          if (index.toDouble() == pageScrollValue) {
+                            selected = brands?['data'][index];
+                          }
+
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Stack(
+                              // We need to animate sizes on scroll here
+                              // #1 Entry animation
+                              alignment: Alignment.topRight,
+                              children: [
+                                ScaleAnimation(
+                                  direction: getItemVisibility(
+                                      "slide-4", animationItems),
+                                  duration: getSlideDuration(
+                                      "slide-4", animationItems),
+                                  // Lets now animate scrolling
+                                  child: AnimatedContainer(
+                                    padding: const EdgeInsets.all(20.0),
+                                    duration: const Duration(milliseconds: 300),
+                                    height: activePage == index ? 180.0 : 120.0,
+                                    width: activePage == index ? 180.0 : 120.0,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: RadialGradient(
+                                        colors: [
+                                          Color(0xFFE4E4EE),
+                                          Color.fromARGB(130, 228, 228, 238),
+                                          Color.fromARGB(118, 228, 228, 238),
+                                          Color.fromARGB(69, 228, 228, 238)
+                                        ],
+                                        stops: [.6, .8, .85, .9],
+                                      ),
+                                      // color: Color(0xFFE4E4EE),
+                                    ),
+                                    child: Transform.scale(
+                                      scale: max(
+                                        .5,
+                                        1.0 - (pageScrollValue - index).abs(),
+                                      ),
+                                      child: ClipOval(
+                                        child: Image.network(brandLogo?[index]
+                                            ['imageSrc'] as String),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Lets delay this
+                                Positioned(
+                                  top: 10.0,
+                                  right: 10.0,
+                                  child: ScaleAnimation(
+                                    duration: getSlideDuration(
+                                        "slide-6", animationItems),
+                                    direction: getItemVisibility(
+                                        "slide-6", animationItems),
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 150,
+                                      ),
+                                      child: index.toDouble() == pageScrollValue
+                                          ? Container(
+                                              width: 30.0,
+                                              height: 30.0,
+                                              decoration: const BoxDecoration(
+                                                color: kPrimaryColor,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : const SizedBox.shrink(),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                        itemCount: brandLogo?.length,
+                      ),
+                    ),
+                    FadeSlide(
+                      direction: getItemVisibility("slide-5", animationItems),
+                      offsetX: 0.0,
+                      offsetY: Y_OFFSET,
+                      duration: getSlideDuration("slide-5", animationItems),
+                      child: Text(
+                        "Swipe left or right to see more",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.grey,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    FadeSlide(
+                      offsetX: 0.0,
+                      offsetY: Y_OFFSET,
+                      duration: getSlideDuration("slide-7", animationItems),
+                      direction: getItemVisibility("slide-7", animationItems),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * .7,
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            // Show bottom sheet on click
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(50.0),
+                                  topRight: Radius.circular(50.0),
+                                ),
+                              ),
+                              barrierColor: Colors.black.withOpacity(.8),
+                              context: context,
+                              builder: (_) {
+                                return CarModal(selected);
+                              },
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 22.0),
+                            child: Text(
+                              "Continue",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 50.0,
-              ),
-              FadeSlide(
-                direction: getItemVisibility("slide-2", animationItems),
-                offsetX: 0.0,
-                offsetY: Y_OFFSET,
-                duration: getSlideDuration("slide-2", animationItems),
-                child: const Text(
-                  "Discover Your\nDream Car",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 32.0,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              FadeSlide(
-                direction: getItemVisibility("slide-3", animationItems),
-                offsetX: 0.0,
-                offsetY: Y_OFFSET,
-                duration: getSlideDuration("slide-3", animationItems),
-                child: const Text(
-                  'Explore a Wide Range of Cars, Evaluate Electric Options, and Compare to Make the Perfect Choice',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              Flexible(
-                child: PageView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  controller: pageController,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Stack(
-                        // We need to animate sizes on scroll here
-                        // #1 Entry animation
-                        alignment: Alignment.topRight,
-                        children: [
-                          ScaleAnimation(
-                            direction:
-                                getItemVisibility("slide-4", animationItems),
-                            duration:
-                                getSlideDuration("slide-4", animationItems),
-                            // Lets now animate scrolling
-                            child: AnimatedContainer(
-                              padding: const EdgeInsets.all(20.0),
-                              duration: const Duration(milliseconds: 300),
-                              height: activePage == index ? 180.0 : 120.0,
-                              width: activePage == index ? 180.0 : 120.0,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xFFE4E4EE),
-                              ),
-                              child: Transform.scale(
-                                scale: max(
-                                  .5,
-                                  1.0 - (pageScrollValue - index).abs(),
-                                ),
-                                child: Image.asset(
-                                  carLogos[index],
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Lets delay this
-                          Positioned(
-                            top: 10.0,
-                            right: 10.0,
-                            child: ScaleAnimation(
-                              duration:
-                                  getSlideDuration("slide-6", animationItems),
-                              direction:
-                                  getItemVisibility("slide-6", animationItems),
-                              child: AnimatedSwitcher(
-                                duration: const Duration(
-                                  milliseconds: 150,
-                                ),
-                                child: index.toDouble() == pageScrollValue
-                                    ? Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: const BoxDecoration(
-                                          color: kPrimaryColor,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.check,
-                                          // FlutterIcons.check_mdi,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: carLogos.length,
-                ),
-              ),
-              FadeSlide(
-                direction: getItemVisibility("slide-5", animationItems),
-                offsetX: 0.0,
-                offsetY: Y_OFFSET,
-                duration: getSlideDuration("slide-5", animationItems),
-                child: Text(
-                  "Swipe left or right to see more",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.0),
-              FadeSlide(
-                offsetX: 0.0,
-                offsetY: Y_OFFSET,
-                duration: getSlideDuration("slide-7", animationItems),
-                direction: getItemVisibility("slide-7", animationItems),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * .7,
-                  decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                    borderRadius: BorderRadius.circular(24.0),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      // Show bottom sheet on click
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50.0),
-                            topRight: Radius.circular(50.0),
-                          ),
-                        ),
-                        barrierColor: Colors.black.withOpacity(.8),
-                        context: context,
-                        builder: (_) {
-                          return CarModal();
-                        },
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 22.0),
-                      child: Text(
-                        "Continue",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
